@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Computer Vision Demo</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="static/assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="static/css/styles.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="d-flex" id="wrapper">
+            <!-- Sidebar-->
+    
+            <!-- Page content wrapper-->
+            <div id="page-content-wrapper">
+                <!-- Top navigation-->
+                <nav class="navbar navbar-dark bg-dark">
+                    <div class="container-fluid">
+                        <img src="static/assets/img/Microsoft-icon.png" height="120" href="https://www.microsoft.com/" alt="">
+                        <p style="font-size:80px;font:Segoe UI;font-weight:600;color:#fafcff">Microsoft Computer Vision</p>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span></button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                                <hr style="width:100%;height:2px;background-color:#fafbff;border-width:0px">
+                                <li class="nav-item active"><a style="color:#fafbff;" class="nav-link" href="{{url_for('home')}}">Home</a></li>
+                                <hr style="width:50px;height:1px;background-color:#fafbff;border-width:0px">
+                                <li class="nav-item active"><a style="color:#fafbff;"class="nav-link" href="{{url_for('ocr')}}">OCR</a></li>
+                                <hr style="width:50px;height:1px;background-color:#fafbff;border-width:0px">
+                                <li class="nav-item active"><a style="color:#fafbff;"class="nav-link" href="{{url_for('objectdetection')}}">Object Detection</a></li>
+                                <hr style="width:50px;height:1px;background-color:#fafbff;border-width:0px">
+                            </ul>
+
+                        </div>
+                    </div>
+                </nav>
+                <!-- Page content-->
+                <div class="container-fluid">
+                </br>
+                    {% block content %}{% endblock %}
+                </div>
+                <center>
+                    <p style="font-size:10PX;">Author: Henry Taylor | Email: henrytaylor@microsoft.com</p>
+                    <p style="font-size:10PX;">Copyright: Microsoft.</p>
+                </center>
+            </div>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="static/js/scripts.js"></script>
+    </body>
+</html>

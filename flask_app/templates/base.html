@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Microsoft Computer Vision</title>
+        <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='assets/img/Microsoft-icon.png')}}" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{{url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
+        <script>
+            function clearResponse(){
+                document.getElementById("response").innerHTML = "";
+            }
+        </script>
+        <script>
+            function loading(){
+                document.getElementById("loading").style.display = "inline";
+            }
+        </script>
+    </head>
+    <body>
+        <div class="d-flex" id="wrapper">
+            <!-- Sidebar-->
+            <div class="border-end bg-dark" id="sidebar-wrapper">
+                <div style="color:#ffffff" class="sidebar-heading  bg-dark"><img style="width:20px" src="{{url_for('static', filename='assets/img/Microsoft-icon.png')}}">     Computer Vision</div>
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action list-group-item-dark" href="{{url_for('home')}}">Home</a>
+                    <a class="list-group-item list-group-item-action list-group-item-dark" href="{{url_for('ocr')}}">OCR</a>
+                    <a class="list-group-item list-group-item-action list-group-item-dark" href="{{url_for('objectdetection')}}">Object Detection</a>
+                </div>
+            </div>
+            <!-- Page content wrapper-->
+            <div id="page-content-wrapper">
+                <!-- Top navigation-->
+                <nav class="navbar navbar-dark bg-dark">
+                    <div class="container-fluid">
+                        <button class="btn btn-primary bg-dark p-2" id="sidebarToggle">Sidebar Toggle</button>
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white;">Resources</a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="https://www.ds-toolkit.com/">Data Science Toolkit</a>
+                                <a class="dropdown-item" href="https://learn.microsoft.com/en-gb/">MS-Learn</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <!-- Page content-->
+                <div class="container-fluid">
+                    {% block content %}{% endblock %}
+                </br></br>
+                </div>
+                <center>
+                    <p style="font-size:10px;">*All images are stored for 10 minutes and then deleted from the server.</p>
+                    <p style="font-size:10PX;">Author: Henry Taylor | Email: henrytaylor@microsoft.com</p>
+                    <p style="font-size:10PX;">Copyright: Microsoft.</p>
+                </center>
+            </div>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{url_for('static', filename='js/scripts.js')}}"></script>
+        <div class="modal-footer">
+            <p>Author: Henry Taylor | </p>
+            <p><a href="mailto:henrytaylor@microsoft.com">henrytaylor@microsoft.com</a></p>
+        </div>
+    </body>
+</html>

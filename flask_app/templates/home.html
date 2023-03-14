@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+    <h1>Microsoft Computer Vision Demo</h1>
+    <p style="font-size:15px;">Object detection returns the bounding box for each object found in a supplied image. For example, if an image contains a dog, cat and person, 
+        the operation will list those objects with their coordinates in the image. It lets the user identify the area an object exists aswell as to determine whether there are multiple instances of the same object in an image.
+        The response also includes the models confidence score (0-100%) that an object lies within the returned bounding box coordinates.
+        Read more <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-object-detection" target="_blank">here</a>. 
+        Find out how to set up your own Object Detection project <a href="https://www.ds-toolkit.com/assets/e592804c-7db8-4266-a579-6155be176f2b" target="_blank">here</a>.</p>
+    <p style="font-size:15px;">The demo below highlights and returns the extracted text and bounding boxes using Azure Object Detection.</p>
+    
+</body>
+
+
+{% endblock %}
