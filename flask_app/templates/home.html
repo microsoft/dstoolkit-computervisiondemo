@@ -2,13 +2,52 @@
 {% block content %}
 <body>
     <h1>Microsoft Computer Vision Demo</h1>
-    <p style="font-size:15px;">Object detection returns the bounding box for each object found in a supplied image. For example, if an image contains a dog, cat and person, 
-        the operation will list those objects with their coordinates in the image. It lets the user identify the area an object exists aswell as to determine whether there are multiple instances of the same object in an image.
-        The response also includes the models confidence score (0-100%) that an object lies within the returned bounding box coordinates.
-        Read more <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-object-detection" target="_blank">here</a>. 
-        Find out how to set up your own Object Detection project <a href="https://www.ds-toolkit.com/assets/e592804c-7db8-4266-a579-6155be176f2b" target="_blank">here</a>.</p>
-    <p style="font-size:15px;">The demo below highlights and returns the extracted text and bounding boxes using Azure Object Detection.</p>
-    
+    <p style="font-size:15px;">Computer Vision is a subfield of Artificial Intelligence which enables machines and computers to gain insight, infomation or knowlege from
+        images or videos. It is used extensively across various industries such as energy, public sector, manufacturing, retail, automotive and more.
+        Tasks are varied and cover a variety of uses. This demo website hosts a variety of these use cases, both Azure based and custom Computer Vision models are demoed. See below for simple examples
+        and use the navigation panel on the left to navigate between the pages where you can upload your own images* and see the power of Computer Vision first hand. </p> 
+
+    <p style="font-size:15px;">
+        Read more about Microsoft Computer Vision documentation and SDKs <a href="https://learn.microsoft.com/en-gb/azure/cognitive-services/computer-vision/" target="_blank">here</a>, 
+        Microsoft Computer Vision offerings <a href="https://azure.microsoft.com/en-gb/products/cognitive-services/computer-vision/" target="_blank">here</a> 
+        and Microsoft Custom Vision offerings <a href="https://azure.microsoft.com/en-us/products/cognitive-services/custom-vision-service/" target="_blank">here</a>.
+        Alternatively, click the Resources dropdown menu on the top right to see options for both Microsoft Learn and the Data Science Toolkit.
+    </p> 
+
+    <h5>Demos</h5>
+    <p style="font-size:15px;">
+        Click each picture to go to the relevant page.
+    </p>
+    <center>
+        <table>
+            <tr>
+                <td>
+                    <center>
+                        <b>Optical Character Recognition</b>
+                        <div>
+                            <a href="{{url_for('ocr')}}"><img src="/static/assets/img/OCR_post.jpeg" height="300px" hspace="5px" vspace="0px" alt="Your Image"></img></a>
+                        </div>
+                    </center>
+                </td>
+                <td>
+                    <center>
+                        <b>Object Detection</b>
+                        <div>
+                            <a href="{{url_for('objectdetection')}}"><img src="/static/assets/img/OD_post.jpg" height="300px" hspace="5px" vspace="0px" alt="Your Image"></img></a>
+                        </div>
+                    </center>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        </table>
+    </center>
 </body>
 
 

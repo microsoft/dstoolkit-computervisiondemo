@@ -176,7 +176,7 @@ def objectdetection():
             for dict_name in label_dict.keys():
                 mini_dict = label_dict[dict_name]
                 cv2.rectangle(uploaded_img,(mini_dict['topX'], mini_dict['topY']),(mini_dict['botX'], mini_dict['botY']),RGBProp,boxWidthProp)
-                cv2.putText(uploaded_img, text=f"{mini_dict['name']} {100 * mini_dict['obj_confidence']}%", org=(mini_dict['topX']+5, (mini_dict['topY']+15)), fontFace=cv2.FONT_HERSHEY_PLAIN, fontScale=fontSizeProp, color=RGBProp,thickness=1)
+                cv2.putText(uploaded_img, text=f"{mini_dict['name']} {100 * mini_dict['obj_confidence']}%", org=(mini_dict['topX']+5, (mini_dict['topY']+35)), fontFace=cv2.FONT_HERSHEY_PLAIN, fontScale=fontSizeProp, color=RGBProp,thickness=2)
                 cv2.imwrite(app.config["IMAGE_UPLOADS"] + "OD_RETURNED_" + image_name, uploaded_img)
             image_return_caption = "Object Detection Returned Image"
         else:
