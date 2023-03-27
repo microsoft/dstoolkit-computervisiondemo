@@ -201,6 +201,41 @@ def objectdetection():
                                HexProp="#ffffff",
                                ModelConfidence=70)
 
+@app.route('/tagdescribe', methods=['GET', 'POST'])
+def tagdescribe():
+    if request.method == 'POST':
+        cleanDir(app.config["IMAGE_UPLOADS"])
+        image = request.files["image"]
+        image_name = saveImg(app.config["IMAGE_UPLOADS"], image)
+                
+        with open(app.config["IMAGE_UPLOADS"] + image_name, "rb") as image_stream:
+            rawHttpResponse = client.analyze_image_in_stream(image=image_stream, visual_features=[VisualFeatureTypes.description]) 
+        
+        tags = rawHttpResponse.description.tags
+        tag_return = "Tags: " + ','.join(tags)
+
+        caption_confidence = {}
+        for desc in rawHttpResponse.description.captions:
+            caption_confidence[desc.text] = desc.confidence
+        
+        desc_return = "Caption: "
+        for num, desc_key in enumerate(caption_confidence.keys()):
+            if num != 0:  
+                desc_return = desc_return + " | "
+            desc_return = desc_return + f"{desc_key} ({str(round(100 * caption_confidence[desc_key], 2))}%)"
+    
+        return render_template("tagdescribe.html", 
+                               image_upload = "img_upload/" + image_name, 
+                               image_upload_caption = "User Supplied Image", 
+                               image_description = desc_return,
+                               image_tags = tag_return)
+    else:
+        return render_template("tagdescribe.html", 
+                               image_upload = "img/" + "cap_pre.jpg", 
+                               image_upload_caption = "Example: User Supplied Image",
+                               image_description = "Caption: a body of water with trees and a cloudy sky (49.89%)",
+                               image_tags = "Tags: outdoor,sky,water,nature,clouds,pond,lake")
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000, debug=True)
     
