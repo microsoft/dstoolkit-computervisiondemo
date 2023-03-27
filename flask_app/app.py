@@ -181,7 +181,7 @@ def objectdetection():
             image_return_caption = "Object Detection Returned Image"
         else:
             cv2.imwrite(app.config["IMAGE_UPLOADS"] + "OD_RETURNED_" + image_name, uploaded_img)
-            image_return_caption = "Object Detection Found No Objects"
+            image_return_caption = f"Object Detection Found No Objects At Model Confidence Level {ModelConfidence}%"
                     
         return render_template("objectdetection.html", 
                                image_upload = "img_upload/" + image_name, 
@@ -197,6 +197,69 @@ def objectdetection():
                                image_return = "img/" + "OD_post.jpg",
                                image_upload_caption = "Example: User Supplied Image",
                                image_return_caption = "Example: Object Detection Returned Image",
+                               fontSizeProp=1, 
+                               HexProp="#ffffff",
+                               ModelConfidence=70)
+ 
+@app.route('/brandsdetection', methods=['GET', 'POST'])
+def brandsdetection():
+    if request.method == 'POST':
+        cleanDir(app.config["IMAGE_UPLOADS"])
+        image = request.files["image"]
+        fontSizeProp = float(request.form['fontSizeProp'])
+        boxWidthProp = int(fontSizeProp + 2)
+        hex = request.form['HexProp']
+        ModelConfidence = int(request.form['ModelConfidence'])
+        RGBProp = hex_to_rgb(hex)
+        RGBProp = (RGBProp[2], RGBProp[1], RGBProp[0]) # reorder for openCV (seems to be BGR)
+        image_name = saveImg(app.config["IMAGE_UPLOADS"], image)
+                
+        with open(app.config["IMAGE_UPLOADS"] + image_name, "rb") as image_stream:
+            rawHttpResponse = client.analyze_image_in_stream(image=image_stream, visual_features=[VisualFeatureTypes.brands]) 
+
+        label_dict = {}
+        for num, objectDet in enumerate(rawHttpResponse.brands):
+            obj_confidence = objectDet.confidence
+            dict_name = f"obj_{num}"
+            if (obj_confidence * 100) >= ModelConfidence:
+                bounding_box_dict = objectDet.rectangle
+                topX, topY, botX, botY = int(bounding_box_dict.x),  int(bounding_box_dict.y),  int(bounding_box_dict.x) + int(bounding_box_dict.w), int(bounding_box_dict.y) +  int(bounding_box_dict.h) 
+                mini_dict = {}
+                mini_dict['topX'] = topX
+                mini_dict['topY'] = topY
+                mini_dict['botX'] = botX
+                mini_dict['botY'] = botY
+                mini_dict['obj_confidence'] = np.round(obj_confidence, 2)
+                mini_dict['name']= objectDet.name
+                label_dict[dict_name] = mini_dict
+                
+        uploaded_img = cv2.imread(app.config["IMAGE_UPLOADS"] + image_name)   
+        if len(label_dict.keys())>0:
+            for dict_name in label_dict.keys():
+                mini_dict = label_dict[dict_name]
+                print("\n\n\n", mini_dict, "\n\n\n")
+                cv2.rectangle(uploaded_img,(mini_dict['topX'], mini_dict['topY']),(mini_dict['botX'], mini_dict['botY']),RGBProp,boxWidthProp)
+                cv2.putText(uploaded_img, text=f"{mini_dict['name']} {100 * mini_dict['obj_confidence']}%", org=(mini_dict['topX']+5, (mini_dict['topY']-10)), fontFace=cv2.FONT_HERSHEY_PLAIN, fontScale=fontSizeProp, color=RGBProp,thickness=2)
+                cv2.imwrite(app.config["IMAGE_UPLOADS"] + "OD_RETURNED_" + image_name, uploaded_img)
+            image_return_caption = "Brands Detection Returned Image"
+        else:
+            cv2.imwrite(app.config["IMAGE_UPLOADS"] + "OD_RETURNED_" + image_name, uploaded_img)
+            image_return_caption = f"Brands Detection Found No Objects At Model Confidence Level {ModelConfidence}%"
+
+        return render_template("brandsdetection.html", 
+                               image_upload = "img_upload/" + image_name, 
+                               image_return = "img_upload/" + "OD_RETURNED_" + image_name,
+                               image_upload_caption = "User Supplied Image",
+                               image_return_caption = image_return_caption,
+                               fontSizeProp=fontSizeProp, 
+                               HexProp=hex,
+                               ModelConfidence=ModelConfidence)
+    else:
+        return render_template("brandsdetection.html", 
+                               image_upload = "img/" + "BD_pre.jpg", 
+                               image_return = "img/" + "BD_post.jpg",
+                               image_upload_caption = "Example: User Supplied Image",
+                               image_return_caption = "Example: Brands Detection Returned Image",
                                fontSizeProp=1, 
                                HexProp="#ffffff",
                                ModelConfidence=70)

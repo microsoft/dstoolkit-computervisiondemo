@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <body>
-    <h1>Object Detection</h1>
-    <p style="font-size:15px;">Object detection returns the bounding box for each object found in a supplied image. For example, if an image contains a dog, cat and person, 
-        the operation will list those objects with their coordinates in the image. It lets the user identify the area an object exists aswell as to determine whether there are multiple instances of the same object in an image.
-        The response also includes the models confidence score (0-100%) that an object lies within the returned bounding box coordinates.
+    <h1>Brands Detection</h1>
+    <p style="font-size:15px;">Brands Detection is a form of Object detection which returns a bounding box for each brand found in a supplied image. For example, if an image contains a Microsoft logo 
+        the operation will list the brand name alongside the coordinates of the brand in the image. It lets the user identify the area the exists aswell as to determine whether there are multiple instances of the same brand in the image.
+        The response also includes the models confidence score (0-100%) that an brands lies within the returned bounding box coordinates.
         Read more <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-object-detection" target="_blank">here</a>. 
-        Find out how to set up your own Object Detection project <a href="https://www.ds-toolkit.com/assets/e592804c-7db8-4266-a579-6155be176f2b" target="_blank">here</a>.</p>
-    <p style="font-size:15px;">The demo below highlights and returns the detected object and bounding boxes using Azure Object Detection.</p>
+    <p style="font-size:15px;">The demo below highlights and returns the detected brand and bounding boxes using Azure Brand Detection.</p>
     <center>
-        <form method="post" action="{{url_for('objectdetection')}}" enctype = "multipart/form-data">
+        <form method="post" action="{{url_for('brandsdetection')}}" enctype = "multipart/form-data">
             <table>
                 <tr>
                     <td align="right"><label for="fontSizeProp">Font Size: </label></td>
