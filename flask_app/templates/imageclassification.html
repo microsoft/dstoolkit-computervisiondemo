@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+    <h1>Image Classification</h1>
+    <p style="font-size:15px;">Image Classification is a technique which can classify an image into several categories. The Azure model used on this page is trained using specialised data sets
+        such as images made up of landmarks and labels. Other domain specific applications can be trained, or applied for - such as the case with
+        Azure's Celebrity domain models. Read more <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-detecting-domain-content" target="_blank">here</a>. 
+    <p style="font-size:15px;">The demo below provides generated text of the models classification of the uploaded landmark and confidence in
+        that classifcation.</p>
+    <center>
+        <form method="post" action="{{url_for('imageclassification')}}" enctype = "multipart/form-data">
+            <table>
+                <tr>
+                    <td align="right"><label for="image">File: </label></td>
+                    <td><input type="file" name="image" required="required"/></td>
+                    <td></td>
+                    <td><button type="submit" class="button">Submit File</button></td>
+                </tr>
+            </table>
+        </form></br>
+        <p style="font-size:15px;">Please upload an image* with text, in PNG, JPEG, or JPG format.</p>
+        <div id="boxwrapper">
+            <div id="box-1" class="box">
+                <img src="/static/assets/{{image_upload}}" hspace="0px" vspace="0px" alt="Your Image"></img>
+            </div>
+        </div>	
+            <div id="boxwrapper">
+                <div id="box-3" class="box">
+                    <p style="font-size:10px;"><I>{{image_upload_caption}}</I></p>
+                </div>
+        </div>	
+        <br>
+        <p style="font-size:18px;"><b>{{image_classification_text}}</b></p>
+    </center>
+</body>
+
+{% endblock %}

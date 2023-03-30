@@ -2,9 +2,10 @@
 {% block content %}
 <body>
     <h1>Brands Detection</h1>
-    <p style="font-size:15px;">Brands Detection is a form of Object detection which returns a bounding box for each brand found in a supplied image. For example, if an image contains a Microsoft logo 
+    <p style="font-size:15px;">Brands Detection is a specific model for Object detection which returns a bounding box for each brand found in a supplied image. For example, if an image contains a Microsoft logo 
         the operation will list the brand name alongside the coordinates of the brand in the image. It lets the user identify the area the exists aswell as to determine whether there are multiple instances of the same brand in the image.
-        The response also includes the models confidence score (0-100%) that an brands lies within the returned bounding box coordinates.
+        The response also includes the models confidence score (0-100%) that an brands lies within the returned bounding box coordinates. The main difference between brands and object detection is the underlying dataset which each model
+        has been trained on. Brands Detection was trained using data specific to branding, while the Object Detection model was trained with general objects and labels.
         Read more <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-object-detection" target="_blank">here</a>. 
     <p style="font-size:15px;">The demo below highlights and returns the detected brand and bounding boxes using Azure Brand Detection.</p>
     <center>

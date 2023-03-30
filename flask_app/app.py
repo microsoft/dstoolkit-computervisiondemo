@@ -289,15 +289,43 @@ def tagdescribe():
     
         return render_template("tagdescribe.html", 
                                image_upload = "img_upload/" + image_name, 
-                               image_upload_caption = "User Supplied Image", 
                                image_description = desc_return,
                                image_tags = tag_return)
     else:
         return render_template("tagdescribe.html", 
                                image_upload = "img/" + "cap_pre.jpg", 
+                               image_description = "Example Caption: a body of water with trees and a cloudy sky (49.89%)",
+                               image_tags = "Example Tags: outdoor,sky,water,nature,clouds,pond,lake")
+
+
+@app.route('/imageclassification', methods=['GET', 'POST'])
+def imageclassification():
+    if request.method == 'POST':
+        cleanDir(app.config["IMAGE_UPLOADS"])
+        image = request.files["image"]
+        image_name = saveImg(app.config["IMAGE_UPLOADS"], image)    
+        model_type = request.form['model_selection'] # "landmarks"
+        with open("C:/Users/henrytaylor/Desktop/Current Project/IP/ds-toolkit/ComputerVisionDemo/" + image_name, "rb") as image_stream:
+            rawHttpResponse = client.analyze_image_by_domain_in_stream(image=image_stream, model=model_type) 
+        try:
+            top_result = rawHttpResponse.result['landmarks'][0]
+            name = top_result["name"]
+            confidence = round(top_result["confidence"]* 100, 2) 
+            if model_type=="landmarks":
+                name = "the " + name
+            return_text = f"The {model_type} model predicts this image is of {name} with a confidence of {confidence}%."
+        except:
+            return_text = f"The {model_type} model cannot classify the contents based on the image provided."
+          
+        return render_template("imageclassification.html", 
+                               image_upload = "img_upload/" + image_name, 
+                               image_upload_caption = "User Supplied Image", 
+                               image_classification_text = return_text)
+    else:
+        return render_template("imageclassification.html", 
+                               image_upload = "img/" + "IC_pre.jpg", 
                                image_upload_caption = "Example: User Supplied Image",
-                               image_description = "Caption: a body of water with trees and a cloudy sky (49.89%)",
-                               image_tags = "Tags: outdoor,sky,water,nature,clouds,pond,lake")
+                               image_classification_text = "Example: The landmarks model predicts this image is of the Blackpool Tower with a confidence of 99.99%.")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000, debug=True)
