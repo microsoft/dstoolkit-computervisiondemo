@@ -304,18 +304,16 @@ def imageclassification():
         cleanDir(app.config["IMAGE_UPLOADS"])
         image = request.files["image"]
         image_name = saveImg(app.config["IMAGE_UPLOADS"], image)    
-        model_type = request.form['model_selection'] # "landmarks"
-        with open("C:/Users/henrytaylor/Desktop/Current Project/IP/ds-toolkit/ComputerVisionDemo/" + image_name, "rb") as image_stream:
+        model_type = "landmarks" # request.form['model_selection']
+        with open(app.config["IMAGE_UPLOADS"] + image_name, "rb") as image_stream:
             rawHttpResponse = client.analyze_image_by_domain_in_stream(image=image_stream, model=model_type) 
         try:
             top_result = rawHttpResponse.result['landmarks'][0]
             name = top_result["name"]
             confidence = round(top_result["confidence"]* 100, 2) 
-            if model_type=="landmarks":
-                name = "the " + name
-            return_text = f"The {model_type} model predicts this image is of {name} with a confidence of {confidence}%."
+            return_text = f"The model classifies this image as {name} with a confidence of {confidence}%."
         except:
-            return_text = f"The {model_type} model cannot classify the contents based on the image provided."
+            return_text = f"The landmarks model cannot classify the contents based on the image provided."
           
         return render_template("imageclassification.html", 
                                image_upload = "img_upload/" + image_name, 
@@ -325,8 +323,37 @@ def imageclassification():
         return render_template("imageclassification.html", 
                                image_upload = "img/" + "IC_pre.jpg", 
                                image_upload_caption = "Example: User Supplied Image",
-                               image_classification_text = "Example: The landmarks model predicts this image is of the Blackpool Tower with a confidence of 99.99%.")
+                               image_classification_text = "Example: The model classifies this image as Blackpool Tower with a confidence of 99.99%.")
 
+
+@app.route('/detectsensitive', methods=['GET', 'POST'])
+def detectsensitive():
+    if request.method == 'POST':
+        cleanDir(app.config["IMAGE_UPLOADS"])
+        image_name = request.form["select_img"]
+        with open(app.config["IMAGE_WEB"] + image_name + ".jpg", "rb") as image_stream:
+            rawHttpResponse = client.analyze_image_in_stream(image=image_stream, visual_features=[VisualFeatureTypes.adult]) 
+        results = rawHttpResponse.adult
+        adult_score = str(round(results.adult_score * 100, 2)) + "%"
+        racy_score = str(round(results.racy_score * 100, 2)) + "%"
+        gore_score = str(round(results.gore_score * 100, 2)) + "%"
+
+        adult_string = f"Adult Score: {adult_score}"
+        racy_string = f"Racy Score: {racy_score}"
+        gore_string = f"Gore Score: {gore_score}"
+          
+        return render_template("detectsensitive.html", 
+                               main_image_name = image_name,
+                               adult_string = adult_string,
+                               racy_string = racy_string,
+                               gore_string = gore_string)
+    else:
+        return render_template("detectsensitive.html",
+                               main_image_name = "",
+                               adult_string = "",
+                               racy_string = "",
+                               gore_string = "")
+        
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000, debug=True)
     

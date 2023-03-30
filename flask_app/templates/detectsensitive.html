@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+    <h1>Detect Sensitive Content</h1>
+    <p style="font-size:15px;">
+        Read more <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-object-detection" target="_blank">here</a>. 
+        Find out how to set up your own Object Detection project <a href="https://www.ds-toolkit.com/assets/e592804c-7db8-4266-a579-6155be176f2b" target="_blank">here</a>.</p>
+    <p style="font-size:15px;">The demo below....</p>
+    <center>
+        <div id="boxwrapper">
+            <div id="box-1" class="box">
+                <img src="/static/assets/img/London.jpg" hspace="0px" vspace="0px" alt="London Image"></img>
+            </div>
+            <div id="box-2" class="box">
+                <img src="/static/assets/img/Knights.jpg" hspace="0px" vspace="0px" alt="Knights Image"></img>
+            </div>
+            <div id="box-5" class="box">
+                <img src="/static/assets/img/Sea.jpg" hspace="0px" vspace="0px" alt="Sea Image"></img>
+            </div>
+        </div>	
+        <div id="boxwrapper">
+            <div id="box-3" class="box">
+                <p style="font-size:15px;">London</p>
+            </div>
+            <div id="box-4" class="box">
+                <p style="font-size:15px;">Knights</p>
+            </div>
+            <div id="box-6" class="box">
+                <p style="font-size:15px;">Sea</p>
+            </div>
+        </div>	
+        <br>
+        <form method="post" action="{{url_for('detectsensitive')}}" enctype = "multipart/form-data">
+            <table>
+                <tr>
+                    <td align="right"><label>Select Image: </label></td>
+                    <td align="right">
+                        <select name="select_img" id="select_img">
+                            <option value="London">London</option>
+                            <option value="Knights">Knights</option>
+                            <option value="Sea">Sea</option>
+                        </select>
+                    </td>
+                    <td><button type="submit" class="button">Submit File</button></td>
+                    <td></td>
+                </tr>
+            </table>
+        </form></br></br>
+        <p style="font-size:18px;"><b>{{adult_string}}</b></p>
+        <p style="font-size:18px;"><b>{{racy_string}}</b></p>
+        <p style="font-size:18px;"><b>{{gore_string}}</b></p>
+    </center>
+</body>
+
+{% endblock %}

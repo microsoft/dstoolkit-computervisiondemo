@@ -5,7 +5,10 @@
     <p style="font-size:15px;">Optical Character Recognition (OCR) is a text based recognition and extraction method allowing the user 
         extract handwritten, printed or generated text in images, such as posters, street signs and product labels, or from documents like 
         articles, reports, forms, and invoices.  This is typically extracted as words, lines, paragraphs or text blocks. Read more 
-        <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/overview-ocr" target="_blank">here</a>.</p>
+        <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/overview-ocr" target="_blank">here</a>.
+        OCR is the underlying technique behind Applied AI services such as <a href="https://learn.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/overview?view=form-recog-3.0.0" target="_blank">Azure Form Recognizer</a> 
+        which extracts data from documents. 
+    </p>
     <p style="font-size:15px;">The demo below highlights and returns the extracted text using Azure OCR.</p>
     <center>
         <form method="post" action="{{url_for('ocr')}}" enctype = "multipart/form-data">
