@@ -2,10 +2,11 @@
 {% block content %}
 <body>
     <h1>Detect Sensitive Content</h1>
-    <p style="font-size:15px;">
-        Read more <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-object-detection" target="_blank">here</a>. 
-        Find out how to set up your own Object Detection project <a href="https://www.ds-toolkit.com/assets/e592804c-7db8-4266-a579-6155be176f2b" target="_blank">here</a>.</p>
-    <p style="font-size:15px;">The demo below....</p>
+    <p style="font-size:15px;">Computer Vision models like the one presented in this demo can be trained to detect adult material in images so developers can restrict the display of these images in their software. 
+        Scores are applied between zero and one (or converted into a percentage) so developers can interpret the results according to their own preferences. For example, anything under 20% gore can be displayed.
+        Adult images are explicitly sexual, Racy images are sexually suggestive and Gory images show blood/gore.
+        Read more <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-detecting-adult-content" target="_blank">here</a>. 
+    <p style="font-size:15px;">The demo below allows a user to choose between three images and their Adult, Racy, and Gory scores are returned.</p>
     <center>
         <div id="boxwrapper">
             <div id="box-1" class="box">
