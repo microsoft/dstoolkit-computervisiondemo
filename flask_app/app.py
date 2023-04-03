@@ -40,14 +40,13 @@ def cleanDir(dir):
         if time_difference_mins >= 10: # mins
             os.remove(dir + file)
 
-def saveImg(dir, image, prefix=None):
+def saveImg(dir, image, prefix=None, image_name=None):
     """Saved image to given directory. Returns image name."""
     if prefix == None:
         image_name = image.filename
         image.save(dir + image_name)
         return image_name 
     else:
-        image_name = image.filename
         image.save(dir + prefix + image_name)
         return  prefix + image_name 
 
@@ -354,6 +353,39 @@ def detectsensitive():
                                racy_string = "",
                                gore_string = "")
         
+        
+@app.route('/smartcropping', methods=['GET', 'POST'])
+def smartcropping():
+    if request.method == 'POST':
+        cleanDir(app.config["IMAGE_UPLOADS"])
+        image = request.files["image"]
+        image_name = saveImg(app.config["IMAGE_UPLOADS"], image)
+
+        with open(app.config["IMAGE_UPLOADS"] + image_name, "rb") as image_stream:
+            rawHttpResponse = client.get_area_of_interest_in_stream(image=image_stream, smart_cropping=True) 
+
+        bounding_box = rawHttpResponse.area_of_interest
+        topX, topY, botX, botY = int(bounding_box.x),  int(bounding_box.y),  int(bounding_box.x) + int(bounding_box.w), int(bounding_box.y) +  int(bounding_box.h) 
+        uploaded_img = cv2.imread(app.config["IMAGE_UPLOADS"] + image_name)   
+        crop_img = uploaded_img[topY:botY, topX:botX]
+        cv2.imwrite(app.config["IMAGE_UPLOADS"] + "smartCropRTN_" + image_name, crop_img)
+        
+        return render_template("smartcropping.html", 
+                               image_upload = "img_upload/" + image_name, 
+                               image_return = "img_upload/" + "smartCropRTN_" + image_name,
+                               image_arrow = "img/" + "downarrow.png", 
+                               image_upload_caption = "User Supplied Image",
+                               image_return_caption = "Smart Cropped User Supplied Image"
+                                )   
+    else:
+        return render_template("smartcropping.html", 
+                               image_upload = "img/" + "SC_pre.jpg", 
+                               image_return = "img/" + "SC_post.png", 
+                               image_arrow = "img/" + "downarrow.png", 
+                               image_upload_caption = "Example: User Supplied Image",
+                               image_return_caption = "Example: Smart Cropped User Supplied Image"
+                               )    
+          
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000, debug=True)
     

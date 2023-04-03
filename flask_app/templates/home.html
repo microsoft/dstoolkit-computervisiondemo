@@ -5,7 +5,8 @@
     <p style="font-size:15px;">Computer Vision is a subfield of Artificial Intelligence which enables machines and computers to gain insight, infomation or knowlege from
         images or videos. It is used extensively across various industries such as energy, public sector, manufacturing, retail, automotive and more.
         Tasks are varied and cover a variety of uses. This demo website hosts a variety of these use cases, both Azure based and custom Computer Vision models are demoed. Each Computer Vision
-        technique can be applied to videos aswell using each frame as an image. See below for simple examples and use the navigation panel on the left to navigate between the pages where you can upload your own images* and see the power of Computer Vision first hand. </p> 
+        technique can be combined with the others or be applied to a video setting using each frame as a consecutive image.
+        See below for simple examples and use the navigation panel on the left to navigate between the pages where you can upload your own images* and see the power of Computer Vision first hand. </p> 
 
     <p style="font-size:15px;">
         Read more about Microsoft Computer Vision documentation and SDKs <a href="https://learn.microsoft.com/en-gb/azure/cognitive-services/computer-vision/" target="_blank">here</a>, 
@@ -17,7 +18,7 @@
     <h5>Demos</h5>
     <p style="font-size:15px;">
         Click each picture to go to the relevant page.
-            In addition to each of these, there are also dedicated Face services, however to promote responsible AI, these are only avalible by request.
+            In addition to each of these, there are also dedicated Computer Vision Face and People services, however to promote responsible AI, these are only avalible by request.
                 Read more about this decision <a href="https://azure.microsoft.com/en-gb/blog/responsible-ai-investments-and-safeguards-for-facial-recognition/" target="_blank">here</a>,
                 and about the Face API offerings <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/overview-identity" target="_blank">here</a>.  
     </p>
@@ -74,6 +75,22 @@
                             <a href="{{url_for('detectsensitive')}}"><img src="/static/assets/img/senCon_post.jpg" height="300px" hspace="5px" vspace="0px" alt="Your Image"></img></a>
                         </div>
                     </center>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <center>
+                        <b>Smart Cropping</b>
+                        <div>
+                            <a href="{{url_for('smartcropping')}}"><img src="/static/assets/img/SC_icon.png" height="300px" hspace="5px" vspace="0px" alt="Your Image"></img></a>
+                        </div>
+                    </center>
+                </td>
+                <td>
+
+                </td>
+                <td>
+
                 </td>
             </tr>
         </table>

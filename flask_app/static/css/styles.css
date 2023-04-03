@@ -113,8 +113,12 @@ min-width:100%;
 max-width: 100%;
 }
 
-
-
+#boxwrapper2{
+  height: auto;
+    display: flex;
+    flex-direction: row;
+  max-width:10%
+  }
 /* HT SELF DEFINED END */
 
 @media (prefers-reduced-motion: no-preference) {

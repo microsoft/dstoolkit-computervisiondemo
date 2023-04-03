@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+    <h1>Image Smart Cropping</h1>
+    <p style="font-size:15px;">Smart Cropping produces a reduced-size representation of an image by intelligently identifying the area of interest
+        and then reducing the dimensions of the image to maintain maximum infomation in a reduced image size.
+        Read more <a href="https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-generating-thumbnails" target="_blank">here</a>. 
+    <p style="font-size:15px;">The demo below crops an image using Azure Smart Cropping. Upload an image, the underlying Computer Vision model identifies an area of interest and returns a cropped image.</p>
+    <center>
+        <form method="post" action="{{url_for('smartcropping')}}" enctype = "multipart/form-data">
+            <table>
+                <tr>
+                    <td align="right"><label for="image">File: </label></td>
+                    <td><input type="file" name="image" required="required"/></td>
+                    <td></td>
+                    <td><button type="submit" class="button">Submit File</button></td>
+                </tr>
+            </table>
+        </form></br>
+        <div id="boxwrapper2">
+            <div id="box-1" class="box">
+                <img src="/static/assets/{{image_upload}}" hspace="0px" vspace="0px" alt="Your Image"></img>
+            </div>
+        </div>	
+        <div id="boxwrapper2">
+            <div id="box-2" class="box">
+                <p style="font-size:10px;"><I>{{image_upload_caption}}</I></p>
+            </div>
+        </div>	
+        <br>
+        <div id="boxwrapper2">
+            <div id="box-1" class="box">
+                <img src="/static/assets/{{image_arrow}}" hspace="0px" vspace="0px" alt="image_arrow Image"></img>
+            </div>
+        </div>
+        <br>
+        <div id="boxwrapper">
+            <div id="box-1" class="box">
+                <img src="/static/assets/{{image_return}}" hspace="0px" vspace="0px" alt="Returned Image"></img>
+            </div>
+        </div>	
+        <div id="boxwrapper">
+            <div id="box-2" class="box">
+                <p style="font-size:10px;"><I>{{image_return_caption}}</I></p>
+            </div>
+        </div>	
+    </center>
+</body>
+
+{% endblock %}
