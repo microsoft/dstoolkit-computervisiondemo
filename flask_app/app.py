@@ -13,7 +13,6 @@ from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from msrest.authentication import CognitiveServicesCredentials
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes, VisualFeatureTypes
 
-
 #########################
 # Define Common Functions 
 #########################
