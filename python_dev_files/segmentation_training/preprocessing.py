@@ -22,6 +22,21 @@ def resize_with_padding(img, expected_size, colour):
     padding = (pad_width, pad_height, delta_width - pad_width, delta_height - pad_height)
     return ImageOps.expand(img, padding, fill = colour)
 
+def binary_mask(pil_img):
+    """Takes image path as input and returns binary (0, or 255 in RGB) image."""
+    img = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
+    img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2GRAY)
+    img = np.array(img)
+    img_copy = img.copy()
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if img[i, j] == 2:
+                img_copy[i, j] = 0
+            else:
+                img_copy[i, j] = 1
+    pil_img_rtn = Image.fromarray(img_copy)
+    return pil_img_rtn
+
 width_list = []
 height_list = []
 faulty_file_names = []
@@ -39,13 +54,12 @@ for filename_full in os.listdir(IMAGE_DATASET_PATH):
             faulty_file_names.append(filename) # check which cv2 struggles to open so we can drop from images and labels 
 
 # get mean width/ height to rescale to this
-scale_down = 1
+scale_down = 2
 mean_width = int(np.mean(width_list)/scale_down)
 mean_height = int(np.mean(height_list)/scale_down)
 # mean_width, mean_height = 100, 75 # set to certain aspect ratios
 
 print(f"\n\nMean width and height: {mean_width, mean_height}\n\n")
-
 
 # Once got mean width and height, resize img labels and training data to mean (taking mean is less computationally expensive overall as it represents mid point of data)
 for filename_full in os.listdir(IMAGE_DATASET_PATH): # iterate again and scale to same size. 
@@ -59,14 +73,15 @@ for filename_full in os.listdir(IMAGE_DATASET_PATH): # iterate again and scale t
                 img_feature = Image.open(file_path)
                 resize_img_feature = resize_with_padding(img_feature, (mean_width, mean_height), (255, 255, 255))  
                               
-                # y labels resize
+                # y labels resize and binary
                 label_file_path = os.path.join(MASK_DATASET_PATH, filename + ".png")
                 img_label = Image.open(label_file_path)
                 resize_img_label = resize_with_padding(img_label, (mean_width, mean_height), 2)
+                pil_binary_mask = binary_mask(resize_img_label)
                 
                 # Save
                 resize_img_feature.save(os.path.join(RESIZE_FEATURES_PATH, filename + ".png"))
-                resize_img_label.save(os.path.join(RESIZE_LABELS_PATH, filename + ".png"))
+                pil_binary_mask.save(os.path.join(RESIZE_LABELS_PATH, filename + ".png"))
             except: 
                 pass
             
