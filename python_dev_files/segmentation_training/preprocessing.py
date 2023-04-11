@@ -12,15 +12,13 @@ MASK_DATASET_PATH = os.path.join(DATASET_PATH, "raw", "annotations", "trimaps")
 RESIZE_FEATURES_PATH = os.path.join(DATASET_PATH, "preproccessed", "features")
 RESIZE_LABELS_PATH = os.path.join(DATASET_PATH, "preproccessed", "labels")
 
-def resize_with_padding(img, expected_size, colour):
+def resize_padding(image, expected_size, colour):
     """Resizes images with padding and scaling to expected sizes using PIL."""
-    img.thumbnail((expected_size[0], expected_size[1]))
-    delta_width = expected_size[0] - img.size[0] # get 
-    delta_height = expected_size[1] - img.size[1]
-    pad_width = delta_width // 2
-    pad_height = delta_height // 2
-    padding = (pad_width, pad_height, delta_width - pad_width, delta_height - pad_height)
-    return ImageOps.expand(img, padding, fill = colour)
+    image.thumbnail((expected_size[0], expected_size[1])) # PIL function
+    delta_width, delta_height = expected_size[0] - image.size[0], expected_size[1] - image.size[1] # get change in height
+    pad_width, pad_height = delta_width // 2, delta_height // 2 # get padding width and height
+    padding = (pad_width, pad_height, delta_width - pad_width, delta_height - pad_height) # wrap padding for PIL function
+    return ImageOps.expand(image, padding, fill = colour) # use PIL function to perform padding 
 
 width_list = []
 height_list = []
