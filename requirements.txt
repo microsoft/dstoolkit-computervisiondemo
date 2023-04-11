@@ -1,0 +1,11 @@
+flask
+numpy
+matplotlib
+opencv-python
+azure-cognitiveservices-vision-computervision
+azure-ai-formrecognizer
+azure-core
+azure-identity
+torch
+torchaudio
+torchvision
