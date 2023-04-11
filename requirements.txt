@@ -9,3 +9,4 @@ azure-identity
 torch
 torchaudio
 torchvision
+scikit-learn
