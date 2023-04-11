@@ -72,7 +72,6 @@ client = ComputerVisionClient(
     endpoint=endpoint,
     credentials=credentials)
 
-
 @app.route('/', methods=['GET'])
 def home():
     cleanDir(app.config["IMAGE_UPLOADS"])
