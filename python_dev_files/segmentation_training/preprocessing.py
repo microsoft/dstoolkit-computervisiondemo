@@ -12,13 +12,15 @@ MASK_DATASET_PATH = os.path.join(DATASET_PATH, "raw", "annotations", "trimaps")
 RESIZE_FEATURES_PATH = os.path.join(DATASET_PATH, "preproccessed", "features")
 RESIZE_LABELS_PATH = os.path.join(DATASET_PATH, "preproccessed", "labels")
 
-def resize_padding(image, expected_size, colour):
+def resize_with_padding(img, expected_size, colour):
     """Resizes images with padding and scaling to expected sizes using PIL."""
-    image.thumbnail((expected_size[0], expected_size[1])) # PIL function
-    delta_width, delta_height = expected_size[0] - image.size[0], expected_size[1] - image.size[1] # get change in height
-    pad_width, pad_height = delta_width // 2, delta_height // 2 # get padding width and height
-    padding = (pad_width, pad_height, delta_width - pad_width, delta_height - pad_height) # wrap padding for PIL function
-    return ImageOps.expand(image, padding, fill = colour) # use PIL function to perform padding 
+    img.thumbnail((expected_size[0], expected_size[1]))
+    delta_width = expected_size[0] - img.size[0] # get 
+    delta_height = expected_size[1] - img.size[1]
+    pad_width = delta_width // 2
+    pad_height = delta_height // 2
+    padding = (pad_width, pad_height, delta_width - pad_width, delta_height - pad_height)
+    return ImageOps.expand(img, padding, fill = colour)
 
 width_list = []
 height_list = []
@@ -37,9 +39,13 @@ for filename_full in os.listdir(IMAGE_DATASET_PATH):
             faulty_file_names.append(filename) # check which cv2 struggles to open so we can drop from images and labels 
 
 # get mean width/ height to rescale to this
-mean_width = int(np.mean(width_list))
-mean_height = int(np.mean(height_list))
+scale_down = 1
+mean_width = int(np.mean(width_list)/scale_down)
+mean_height = int(np.mean(height_list)/scale_down)
+# mean_width, mean_height = 100, 75 # set to certain aspect ratios
+
 print(f"\n\nMean width and height: {mean_width, mean_height}\n\n")
+
 
 # Once got mean width and height, resize img labels and training data to mean (taking mean is less computationally expensive overall as it represents mid point of data)
 for filename_full in os.listdir(IMAGE_DATASET_PATH): # iterate again and scale to same size. 
