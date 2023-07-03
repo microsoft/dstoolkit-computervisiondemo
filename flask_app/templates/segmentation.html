@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+    <h1>Semantic Segmentation</h1>
+    <p style="font-size:15px;">Semantic Segmentation is a type of image segmentation which classifies every pixel
+        as belonging to a particular class of object, for example this demo classifies foreground pixels of cats/kittens
+        and background. It is one of the most difficult computer vision tasks to perform as the granuality of classification 
+        is the smallest (pixel) compared to an image (image classification), bounding box (object detection) which require fewer outputs. 
+        For example, a 100px by 100px image would require 100,000 different decisions about each class.   
+    </br></br>
+        The model trained here is based on the deep learning <a href="https://arxiv.org/abs/1505.04597" target="_blank">UNET</a> architecture and is trained
+        using the Oxford Pet <a href="https://www.robots.ox.ac.uk/~vgg/data/pets/" target="_blank">dataset</a>.
+        Training took around 24 hours and was ran on a GPU on Azure Machine Learning Studio.
+        Read more about Azure Machine Learning Studio <a href="https://learn.microsoft.com/en-us/azure/machine-learning/overview-what-is-azure-machine-learning?view=azureml-api-2" target="_blank">here</a>. 
+        Full code can be found on the accompaning GitHub in the top right under resources. 
+    </p>
+    <p style="font-size:15px;">The demo below segments images of cats into foreground and background. The majority of the training data used
+        was front facing images of cats; therefore, similar images will perform better on this model. The model is not perfect and there is room for 
+        improvement should the user wish to retrain using the GitHub Repo code.</p>
+    <center>
+        <form method="post" action="{{url_for('segmentation')}}" enctype = "multipart/form-data">
+            <table>
+                <tr>
+                    <td align="right"><label for="image">File: </label></td>
+                    <td><input type="file" name="image" required="required"/></td>
+                    <td></td>
+                    <td><button type="submit" class="button">Submit File</button></td>
+                </tr>
+            </table>
+        </form></br>
+        <p style="font-size:15px;">Please upload an image* with text, in PNG, JPEG, or JPG format.</p>
+        <div id="boxwrapper">
+            <div id="box-1" class="box">
+                <img src="/static/assets/{{image_upload}}" hspace="0px" vspace="0px" alt="Your Image"></img>
+            </div>
+            <div id="box-2" class="box">
+                <img src="/static/assets/{{image_return}}" hspace="0px" vspace="0px" alt="Returned Image"></img>
+            </div>
+        </div>	
+        <div id="boxwrapper">
+            <div id="box-3" class="box">
+                <p style="font-size:10px;"><I>{{image_upload_caption}}</I></p>
+            </div>
+            <div id="box-4" class="box">
+                <p style="font-size:10px;"><I>{{image_return_caption}}</I></p>
+            </div>
+        </div>	
+    </center>
+</body>
+
+{% endblock %}

@@ -9,9 +9,35 @@ import ssl
 import sys
 import time 
 import cv2
+import torch
+import torch.nn as nn
+from PIL import Image, ImageOps
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from msrest.authentication import CognitiveServicesCredentials
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes, VisualFeatureTypes
+
+#########################
+# Define Web App Backend 
+#########################
+app = Flask(__name__)
+microsoft_colours = ["#f25022", "#80ba01", "#02a4ef", "#ffb902"]
+
+app_path = sys.path[0] # file paths
+app.config["JSON_PATH"] = app_path + "/static/assets/endpoints.json"
+app.config["IMAGE_UPLOADS"] = app_path + "/static/assets/img_upload/"
+app.config["IMAGE_WEB"] = app_path + "/static/assets/img/"
+
+with open(app.config["JSON_PATH"]) as file: # Parameters
+    json_file = json.load(file)
+endpoint = json_file['endpoint']
+key = json_file['key']
+region = json_file['region']
+
+# Setup CV multi resource credentials
+credentials = CognitiveServicesCredentials(key)
+client = ComputerVisionClient(
+    endpoint=endpoint,
+    credentials=credentials)
 
 #########################
 # Define Common Functions 
@@ -50,28 +76,93 @@ def saveImg(dir, image, prefix=None, image_name=None):
         return  prefix + image_name 
 
 #########################
-# Define Web App Backend 
+# Define Custom Segmentation Functions and Model Arcitecture
 #########################
-app = Flask(__name__)
-microsoft_colours = ["#f25022", "#80ba01", "#02a4ef", "#ffb902"]
+class DoubleConv(nn.Module):
+    """https://www.youtube.com/watch?v=IHq1t7NxS8k"""
+    def __init__(self, in_channels, out_channels):
+        super(DoubleConv, self).__init__() # what does super do?
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False), # set bias to false as using batchnorm (cancels bias)
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+        )
 
-app_path = sys.path[0] # file paths
-app.config["JSON_PATH"] = app_path + "/static/assets/endpoints.json"
-app.config["IMAGE_UPLOADS"] = app_path + "/static/assets/img_upload/"
-app.config["IMAGE_WEB"] = app_path + "/static/assets/img/"
+    def forward(self, x):
+        x = self.conv(x)
+        return x
 
-with open(app.config["JSON_PATH"]) as file: # Parameters
-    json_file = json.load(file)
-endpoint = json_file['endpoint']
-key = json_file['key']
-region = json_file['region']
+class UNet(nn.Module): # means inherit from nn.module
+    def __init__(self, in_channels=3, out_channels=1, features = [128,256,512,1024]): # channels refer to channel so rgb 
+        """init creates arcitecture for the class instance. """
+        super(UNet, self,).__init__()
+        self.downs = nn.ModuleList() # lists that store convolution layers, module list 
+        self.ups = nn.ModuleList()
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2) # (kernel_size=2, stride=2) = divisible by 2
+        
+        for feature in features: # down blocks of UNET, go through features 
+            self.downs.append(DoubleConv(in_channels = in_channels, out_channels = feature)) # add layer to UNET
+            in_channels = feature # set new in channels as last our channel
+            
+        self.bottleneck = DoubleConv(in_channels = features[-1], out_channels = features[-1] * 2) # bottleneck. Last feature in list in and then last feqature x 2 to go out
+        
+        for feature in reversed(features): # up blocks
+            self.ups.append(
+                nn.ConvTranspose2d(in_channels = feature*2, out_channels = feature, kernel_size=2, stride=2)) # up sample 
+            self.ups.append(
+                DoubleConv(in_channels = feature*2, out_channels = feature)) # 2 convolutions
 
-# Setup CV multi resource credentials
-credentials = CognitiveServicesCredentials(key)
-client = ComputerVisionClient(
-    endpoint=endpoint,
-    credentials=credentials)
+        # final conv layer
+        self.finalConv = nn.Conv2d(in_channels=features[0], out_channels=out_channels, kernel_size = 1) # change number of channels 
+        
+    def forward(self, x):
+        skip_connections = [] # store all the skip connections
+        for down in self.downs: # down blocks
+            x = down(x) # doubleconv
+            skip_connections.append(x) # used to take across the U
+            x = self.pool(x) # down sampling
 
+        x = self.bottleneck(x) # bottleneck and double conv
+        skip_connections = skip_connections[::-1] # inverse skip connections (as we will use them in reverse order that we added them)
+        
+        for idx in range(0,len(self.ups),2):  # loop through every 2 ups (as each up step has the ConvTranspose and the DoubleConv)  
+            x = self.ups[idx](x) # convtranspose (up sampling)
+            skipped_connection = skip_connections[idx//2] # get the skipped connection
+            concat_skip = torch.cat((skipped_connection,x),dim=1) # Dim 1 is channel dim. Concatenate upsampled activation maps with skipped connection
+            x = self.ups[idx+1](concat_skip) # doubleconv with concatenated activation maps
+
+        x = self.finalConv(x) # do final convolution to get mask
+        return torch.sigmoid(x)
+    
+def resize_with_padding(img, expected_size, colour):
+    """Inverse of function resize_with_crop. Resizes images with padding and scaling to expected sizes using PIL."""
+    img.thumbnail((expected_size[0], expected_size[1]))
+    delta_width = expected_size[0] - img.size[0] # get 
+    delta_height = expected_size[1] - img.size[1]
+    pad_width = delta_width // 2
+    pad_height = delta_height // 2
+    padding = (pad_width, pad_height, delta_width - pad_width, delta_height - pad_height)
+    expandedIMG = ImageOps.expand(img, padding, fill = colour)
+    return expandedIMG, padding # colour is colour of image fill
+
+def resize_with_crop(img: np.array, padding: tuple, originalSize: tuple):
+    """Inverse of function resize_with_padding. Reverses padding then resizes segmented image to original size."""
+    originalWidth, originalHeight = originalSize # original image size and width to reisze too.     
+    startWidth, startHeight, endWidth, endHeight = padding # get padding sizes to crop (inverse padding)
+    inversePaddingImg = img[startHeight: endHeight, startWidth: endWidth] # removes padding
+    resizedImage = cv2.resize(inversePaddingImg, (originalWidth, originalHeight)) # resize to original dimensions
+    return resizedImage
+
+model = UNet(in_channels=3, out_channels=1)
+model.load_state_dict(torch.load(app_path + "/static/assets/model80Epoch.pkl"))
+thresh=0.5
+
+#########################
+# Define Web App Pages
+#########################
 @app.route('/', methods=['GET'])
 def home():
     cleanDir(app.config["IMAGE_UPLOADS"])
@@ -198,6 +289,49 @@ def objectdetection():
                                fontSizeProp=1, 
                                HexProp="#ffffff",
                                ModelConfidence=70)
+
+   
+@app.route('/segmentation', methods=['GET', 'POST'])
+def segmentation():
+    if request.method == 'POST':
+        cleanDir(app.config["IMAGE_UPLOADS"])
+        image = request.files["image"]
+        image_name = saveImg(app.config["IMAGE_UPLOADS"], image)
+        
+        sampleImg = Image.open(app.config["IMAGE_UPLOADS"] + image_name).convert("RGB")  # X images resize
+        originalWidth, originalHeight = sampleImg.size # get image size
+        resizeImg, padding = resize_with_padding(sampleImg.copy(), (256, 256), (0,0,0)) # resize and apply padding so image can be fed to DL model
+        sampleImgResize = np.asarray(resizeImg) # get as numpy array
+        sample = torch.from_numpy(np.moveaxis(sampleImgResize, -1, 0)).float().reshape(1, 3, 256, 256) # convert to torch tensor and change axis to format as training data was. Reshape also.
+        
+        test_preds = torch.tensor([]) # setup empty tensors # created as so to mirror training/ validation sets and the process.
+        with torch.no_grad(): # remove grad as this is inference and dont need it.
+            batch_preds = model(sample).reshape(1, 256, 256) # get batch preds when batchSize = 1 (single image inference)
+            test_preds = torch.cat((test_preds, batch_preds), 0) # concat to batch         
+        
+        pred_copy = test_preds.numpy()[0].copy() # convert to numpy and copy first (only inference 1 at time)
+        pred_copy[pred_copy>thresh] = 1 # apply binary segmentation 
+        pred_copy[pred_copy<=thresh] = 0
+        
+        widthHeight = pred_copy.shape[0] # get shape of new image (will be 256 on this model.)
+        inversePadding = (padding[0], padding[1], widthHeight - padding[2], widthHeight - padding[3]) # for resize back to original size
+        
+        segmentedImgOriSize = resize_with_crop(cv2.cvtColor(pred_copy, cv2.COLOR_GRAY2RGB), inversePadding, (originalWidth, originalHeight))
+        segmentedImgOriSize[segmentedImgOriSize==1] =255 # colour correct from binary to 0-255
+        cv2.imwrite(app.config["IMAGE_UPLOADS"] + "SEG_RETURNED_" + image_name + ".png", segmentedImgOriSize)
+        
+        image_return_caption = f"Semantic Segmentation returned Image"            
+        return render_template("segmentation.html", 
+                               image_upload = "img_upload/" + image_name, 
+                               image_return = "img_upload/" + "SEG_RETURNED_" + image_name + ".png",
+                               image_upload_caption = "User Supplied Image",
+                               image_return_caption = image_return_caption)
+    else:
+        return render_template("segmentation.html", 
+                               image_upload = "img/" + "SEG_pre.png", 
+                               image_return = "img/" + "SEG_post.png",
+                               image_upload_caption = "Example: User Supplied Image",
+                               image_return_caption = "Example: Segmentated Returned Image")
  
 @app.route('/brandsdetection', methods=['GET', 'POST'])
 def brandsdetection():
@@ -384,7 +518,36 @@ def smartcropping():
                                image_upload_caption = "Example: User Supplied Image",
                                image_return_caption = "Example: Smart Cropped User Supplied Image"
                                )    
+
+@app.route('/motiondetection', methods=['GET', 'POST'])
+def motiondetection():
+    if request.method == 'POST':
+        cleanDir(app.config["IMAGE_UPLOADS"])
+        image_name = request.form["select_img"]
+        with open(app.config["IMAGE_WEB"] + image_name + ".jpg", "rb") as image_stream:
+            rawHttpResponse = client.analyze_image_in_stream(image=image_stream, visual_features=[VisualFeatureTypes.adult]) 
+        results = rawHttpResponse.adult
+        adult_score = str(round(results.adult_score * 100, 2)) + "%"
+        racy_score = str(round(results.racy_score * 100, 2)) + "%"
+        gore_score = str(round(results.gore_score * 100, 2)) + "%"
+
+        adult_string = f"Adult Score: {adult_score}"
+        racy_string = f"Racy Score: {racy_score}"
+        gore_string = f"Gore Score: {gore_score}"
           
+        return render_template("motiondetection.html", 
+                               main_image_name = image_name,
+                               adult_string = adult_string,
+                               racy_string = racy_string,
+                               gore_string = gore_string)
+    else:
+        return render_template("motiondetection.html",
+                               main_image_name = "",
+                               adult_string = "",
+                               racy_string = "",
+                               gore_string = "")
+        
+        
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000, debug=True)
     

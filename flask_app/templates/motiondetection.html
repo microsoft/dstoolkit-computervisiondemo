@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+    <h1>Video + Motion Detecton</h1>
+    <p style="font-size:15px;">Every Computer Vision technique that has been demonstrated on this website (and more) can be applied to videos on a frame by frame basis. 
+
+        For an example using a video of cars on a motorway, we can apply simple motion detection techniques to detect the motion in the video. Once this is over 
+        a threshold that we define we can activate an 'alarm' signaling there is motion near the camera or an object of a certain size has moved passed. Please see the top 
+        left corner for an indication when alarm is activated.
+    </br></br>
+        You can imagine the applicability of techniques such as these:- security cameras, manufacturing checks (on/ off), detecting wildlife of a certain size, ect.
+        Read more about Azure Computer Vision <a href="https://azure.microsoft.com/en-gb/products/cognitive-services/computer-vision/" target="_blank">here</a>. 
+    <center>
+        <div id="boxwrapper">
+            <div id="box-1" class="box">
+                <video width="500" height="360" controls>
+                    <source src="/static/assets/img/MotionDet_Pre.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </div>
+            <div id="box-2" class="box">
+                <video width="500" height="360" controls>
+                    <source src="/static/assets/img/motionPost.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>	
+        <div id="boxwrapper">
+            <div id="box-3" class="box">
+                <p style="font-size:10px;"><I>Example: Video of Vehicles</I></p>
+            </div>
+            <div id="box-4" class="box">
+                <p style="font-size:10px;"><I>Example: Motion of Vehicles</I></p>
+            </div>
+        </div>	
+    </center>
+</body>
+
+{% endblock %}

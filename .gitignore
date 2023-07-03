@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 endpoints.json
+*.pkl
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
