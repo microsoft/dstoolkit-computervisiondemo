@@ -157,7 +157,7 @@ def resize_with_crop(img: np.array, padding: tuple, originalSize: tuple):
     return resizedImage
 
 model = UNet(in_channels=3, out_channels=1)
-model.load_state_dict(torch.load(app_path + "/static/assets/model80Epoch.pkl"))
+model.load_state_dict(torch.load(app_path + "/static/assets/model.pkl"))
 thresh=0.5
 
 #########################
