@@ -1,14 +1,14 @@
 # Computer Vision Demo
 
-# Introduction 
+## Introduction 
 This repo aims to provide an insight into computer vision models running on Azure. It covers a wide range of use cases utilizing custom models (trained on Azure Machine Learning Studio) and Azure Cognitive Services. The demo website is deployed on https://www.ds-toolkit.com/.
 
-# Getting Started
+## Getting Started
 1.	create a virtual environment locally
 2.  pip install -r .\requirements.txt
 3.	replace cognitive services enviroment API keys with your own
 
-# Build and Test
+## Build and Test
 The website is created using HTML/ CSS and Python (Flask). Run the app.py and load the website in your browser. 
 Apart from the home page, there are nine demos. Each demo has a seperate HTML page associated with it. The majority of the demos allow you to upload your own images to test them out.
 Each demo is outined below:
@@ -23,7 +23,7 @@ Each demo is outined below:
 8. Brands Detection - uses Azure cognitive services to idenitify and locate brands in an image.
 9. Motion Detection (Video) - uses simple computer vision techniques to idenitify the motion of objects in a video.
 
-# Contribute
+## Contribute
 Please reach out to henrytaylor@microsoft.com, for any questions, suggestions, or improvements. Thank you!
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).

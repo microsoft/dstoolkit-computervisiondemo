@@ -10,8 +10,8 @@
 *.userosscache
 *.sln.docstates
 endpoints.json
-*.pkl
-Dockerfile
+*.pkl # model file for segmentation
+# Dockerfile
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
