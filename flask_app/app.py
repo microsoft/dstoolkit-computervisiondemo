@@ -28,10 +28,10 @@ app.config["JSON_PATH"] = app_path + "/static/assets/endpoints.json"
 app.config["IMAGE_UPLOADS"] = app_path + "/static/assets/img_upload/"
 app.config["IMAGE_WEB"] = app_path + "/static/assets/img/"
 
-with open(app.config["JSON_PATH"]) as file: # Local Parameters
-    json_file = json.load(file)
-os.environ["ai-multiaccount-endpoint"] = json_file['endpoint']
-os.environ["ai-multiaccount-apikey"] = json_file['key']
+# with open(app.config["JSON_PATH"]) as file: # Local Parameters
+#     json_file = json.load(file)
+# os.environ["ai-multiaccount-endpoint"] = json_file['endpoint']
+# os.environ["ai-multiaccount-apikey"] = json_file['key']
 
 # Setup CV multi resource credentials
 credentials = CognitiveServicesCredentials(os.environ["ai-multiaccount-apikey"])
