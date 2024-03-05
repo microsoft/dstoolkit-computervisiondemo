@@ -82,6 +82,7 @@ max-width:80%
   display: flex;
   background: white;
   margin: 0.1%;
+  display: block;
 }
 #box-1{
   height: 100%;
@@ -109,7 +110,7 @@ max-width:80%
 }
 .box img{
 max-height:100%;
-min-width:100%;
+min-width:20%;
 max-width: 100%;
 }
 
@@ -11375,7 +11376,7 @@ textarea.form-control-lg {
 }
 
 #sidebar-wrapper .list-group {
-  width: 15rem;
+  width: 14rem;
 }
 
 #page-content-wrapper {
@@ -11397,6 +11398,6 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
   }
 
   body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
-    margin-left: -15rem;
+    margin-left: -13rem;
   }
 }

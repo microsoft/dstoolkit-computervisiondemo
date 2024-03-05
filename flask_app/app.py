@@ -28,10 +28,10 @@ app.config["JSON_PATH"] = app_path + "/static/assets/endpoints.json"
 app.config["IMAGE_UPLOADS"] = app_path + "/static/assets/img_upload/"
 app.config["IMAGE_WEB"] = app_path + "/static/assets/img/"
 
-# with open(app.config["JSON_PATH"]) as file: # Local Parameters
-#     json_file = json.load(file)
-# os.environ["ai-multiaccount-endpoint"] = json_file['endpoint']
-# os.environ["ai-multiaccount-apikey"] = json_file['key']
+with open(app.config["JSON_PATH"]) as file: # Local Parameters
+    json_file = json.load(file)
+os.environ["ai-multiaccount-endpoint"] = json_file['endpoint']
+os.environ["ai-multiaccount-apikey"] = json_file['key']
 
 # Setup CV multi resource credentials
 credentials = CognitiveServicesCredentials(os.environ["ai-multiaccount-apikey"])
@@ -157,7 +157,7 @@ def resize_with_crop(img: np.array, padding: tuple, originalSize: tuple):
     return resizedImage
 
 model = UNet(in_channels=3, out_channels=1)
-model.load_state_dict(torch.load(app_path + "/static/assets/model.pkl"))
+model.load_state_dict(torch.load(app_path + "/static/assets/model.pkl", map_location=torch.device('cpu')))
 thresh=0.5
 
 #########################
