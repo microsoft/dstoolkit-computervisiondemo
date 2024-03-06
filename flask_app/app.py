@@ -24,11 +24,12 @@ app = Flask(__name__)
 microsoft_colours = ["#f25022", "#80ba01", "#02a4ef", "#ffb902"]
 
 app_path = sys.path[0] # file paths
-app.config["JSON_PATH"] = app_path + "/static/assets/endpoints.json"
 app.config["IMAGE_UPLOADS"] = app_path + "/static/assets/img_upload/"
 app.config["IMAGE_WEB"] = app_path + "/static/assets/img/"
 
-# with open(app.config["JSON_PATH"]) as file: # Local Parameters
+# Local Key storage (no keys stored as enviroment variables) - place keys in endpoints.json file path as below
+# app.config["JSON_PATH"] = app_path + "/static/assets/endpoints.json"
+# with open(app.config["JSON_PATH"]) as file:
 #     json_file = json.load(file)
 # os.environ["ai-multiaccount-endpoint"] = json_file['endpoint']
 # os.environ["ai-multiaccount-apikey"] = json_file['key']
@@ -282,7 +283,7 @@ def objectdetection():
                                ModelConfidence=ModelConfidence)
     else:
         return render_template("objectdetection.html", 
-                               image_upload = "img/" + "OD_pre.jpg", 
+                               image_upload = "img/" + "OD_pre.png", 
                                image_return = "img/" + "OD_post.jpg",
                                image_upload_caption = "Example: User Supplied Image",
                                image_return_caption = "Example: Object Detection Returned Image",
@@ -425,7 +426,7 @@ def tagdescribe():
                                image_tags = tag_return)
     else:
         return render_template("tagdescribe.html", 
-                               image_upload = "img/" + "cap_pre.jpg", 
+                               image_upload = "img/" + "cap_pre.png", 
                                image_description = "Example Caption: a body of water with trees and a cloudy sky (49.89%)",
                                image_tags = "Example Tags: outdoor,sky,water,nature,clouds,pond,lake")
 
@@ -453,9 +454,9 @@ def imageclassification():
                                image_classification_text = return_text)
     else:
         return render_template("imageclassification.html", 
-                               image_upload = "img/" + "IC_pre.jpg", 
+                               image_upload = "img/" + "IC_pre.png", 
                                image_upload_caption = "Example: User Supplied Image",
-                               image_classification_text = "Example: The model classifies this image as Blackpool Tower with a confidence of 99.99%.")
+                               image_classification_text = "Example: The model classifies this image as Blackpool Tower with a confidence of 99.19%.")
 
 
 @app.route('/detectsensitive', methods=['GET', 'POST'])
