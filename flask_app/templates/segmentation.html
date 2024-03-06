@@ -6,17 +6,18 @@
         as belonging to a particular class of object, for example this demo classifies foreground pixels of cats/kittens
         and background. It is one of the most difficult computer vision tasks to perform as the granuality of classification 
         is the smallest (pixel) compared to an image (image classification), bounding box (object detection) which require fewer outputs. 
-        For example, a 100px by 100px image would require 100,000 different decisions about each class.   
+        For example, a 100px by 100px image would require 100,000 different decisions about each class for segmentation.   
     </br></br>
         The model trained here is based on the deep learning <a href="https://arxiv.org/abs/1505.04597" target="_blank">UNET</a> architecture and is trained
         using the Oxford Pet <a href="https://www.robots.ox.ac.uk/~vgg/data/pets/" target="_blank">dataset</a>.
         Training took around 24 hours and was ran on a GPU on Azure Machine Learning Studio.
         Read more about Azure Machine Learning Studio <a href="https://learn.microsoft.com/en-us/azure/machine-learning/overview-what-is-azure-machine-learning?view=azureml-api-2" target="_blank">here</a>. 
-        Full code can be found on the accompaning GitHub in the top right under resources. 
     </p>
     <p style="font-size:15px;">The demo below segments images of cats into foreground and background. The majority of the training data used
         was front facing images of cats; therefore, similar images will perform better on this model. The model is not perfect and there is room for 
-        improvement should the user wish to retrain using the GitHub Repo code.</p>
+        improvement. If a non-cat image is uploaded, the model will perform poorly. Models such as this could be combined into a pipeline
+        where object detection identifies a bounding box where a cat is, then a segmentation model such as this could classify each pixel. 
+    </p>
     <center>
         <form method="post" action="{{url_for('segmentation')}}" enctype = "multipart/form-data">
             <table>

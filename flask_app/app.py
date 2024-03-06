@@ -24,15 +24,17 @@ app = Flask(__name__)
 microsoft_colours = ["#f25022", "#80ba01", "#02a4ef", "#ffb902"]
 
 app_path = sys.path[0] # file paths
-app.config["IMAGE_UPLOADS"] = app_path + "/static/assets/img_upload/"
+uploadPath=app_path + "/static/assets/img_upload/"
+os.makedirs(uploadPath, exist_ok=True)
+app.config["IMAGE_UPLOADS"] = uploadPath
 app.config["IMAGE_WEB"] = app_path + "/static/assets/img/"
 
-# Local Key storage (no keys stored as enviroment variables) - place keys in endpoints.json file path as below
-# app.config["JSON_PATH"] = app_path + "/static/assets/endpoints.json"
-# with open(app.config["JSON_PATH"]) as file:
-#     json_file = json.load(file)
-# os.environ["ai-multiaccount-endpoint"] = json_file['endpoint']
-# os.environ["ai-multiaccount-apikey"] = json_file['key']
+# # Local Key storage (no keys stored as enviroment variables) - place keys in endpoints.json file path as below
+app.config["JSON_PATH"] = app_path + "/static/assets/endpoints.json"
+with open(app.config["JSON_PATH"]) as file:
+    json_file = json.load(file)
+os.environ["ai-multiaccount-endpoint"] = json_file['endpoint']
+os.environ["ai-multiaccount-apikey"] = json_file['key']
 
 # Setup CV multi resource credentials
 credentials = CognitiveServicesCredentials(os.environ["ai-multiaccount-apikey"])
@@ -63,7 +65,7 @@ def cleanDir(dir):
     for file in file_dir: # clean up old files
         file_timeCreation = os.path.getmtime(dir + file)
         time_difference_mins = (current_time - file_timeCreation) / 60
-        if time_difference_mins >= 10: # mins
+        if time_difference_mins >= 5: # mins
             os.remove(dir + file)
 
 def saveImg(dir, image, prefix=None, image_name=None):
