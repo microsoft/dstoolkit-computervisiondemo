@@ -5,14 +5,14 @@ This repo aims to provide an insight into computer vision models running on Azur
 
 ## Getting Started
 The demo website is located [here]() but if you wish to setup and host your own web app, follow these steps:
-1.	Clone this repository on a vm or local machine.
-2.  Create a new python enviroment installing all libraries listed in requirements.txt. 
-    2.1.  Use the command: pip install -r .\requirements.txt
-3.	Replace Cognitive Services enviroment API keys with your own
-    3.1. The Azure Cognitive Services resource required is: "Azure AI services multi-service account"
-    3.2.1 Set an enviroment variable called: "ai-multiaccount-endpoint" and "ai-multiaccount-apikey"
-    OR
-    3.2.1 Add a json file to "/static/assets/endpoints.json" with values for "endpoint" and "key" and uncomment code at the top of app.py. 
+
+- 1.	Clone this repository on a vm or local machine.
+- 2.  Create a new python enviroment installing all libraries listed in requirements.txt. 
+    - 2.1.  Use the command: pip install -r .\requirements.txt
+- 3.	Replace Cognitive Services enviroment API keys with your own:
+    - 3.1. The Azure Cognitive Services resource required is: "Azure AI services multi-service account". Perform 3.2.1 OR 3.2.2. 
+    - 3.2.1 Set enviroment variables called: "ai-multiaccount-endpoint" and "ai-multiaccount-apikey"
+    - 3.2.2 Add a json file to "/static/assets/endpoints.json" with values for "endpoint" and "key" and uncomment code at the top of app.py. 
 
 ## Build and Test
 The website is created using HTML/ CSS and Python (Flask). Run the app.py and load the website in your browser. 
