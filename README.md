@@ -4,22 +4,22 @@
 This repo aims to provide an insight into computer vision models running on Azure. It covers a wide range of use cases utilizing custom segmentation models (trained on Azure Machine Learning Studio) and Azure Computer Vision models on Cognitive Services. The demo website is deployed on the [Data Science Toolkit](https://www.ds-toolkit.com/).
 
 ## Getting Started
-The demo website is located [here]() but if you wish to setup and host your own web app, follow these steps:
+The demo website can be accessed [here](https://computer-vision.victorioussea-621a1cbd.westeurope.azurecontainerapps.io/), but if you wish to setup and host your own web app, follow these steps:
 
-- 1. Clone this repository on a vm or local machine.
-- 2. In the terminal, create a new Python enviroment (3.10 was used in demo) and activate it.
+- I. Clone this repository on a vm or local machine.
+- II. In the terminal, create a new Python enviroment (3.10 was used in demo) and activate it.
     - Use the command: pip install virtualenv
     - Use the command: python -m virtualenv env
     - Use the command: env\Scripts\Activate
-- 3. Open cloned folder in terminal.
+- III. Open cloned folder in terminal.
     - Use the command: cd "folder path"
-- 4. Install all libraries listed in requirements.txt. 
+- IV. Install all libraries listed in requirements.txt. 
     - Use the command: pip install -r .\requirements.txt
-- 5. Replace Cognitive Services enviroment API keys with your own:
-    - The Azure Cognitive Services resource required is: "Azure AI services multi-service account". Perform 5.1 OR 5.2. 
-    - 5.1 Set enviroment variables called: "ai-multiaccount-endpoint" and "ai-multiaccount-apikey"
-    - 5.2 Add a json file to "/static/assets/endpoints.json" with values for "endpoint" and "key" and uncomment code at the top of app.py. 
-- 6. Run the web app
+- V. Replace Cognitive Services enviroment API keys with your own:
+    - The Azure Cognitive Services resource required is: "Azure AI services multi-service account". Perform V.i OR V.ii. 
+    - V.i Set enviroment variables called: "ai-multiaccount-endpoint" and "ai-multiaccount-apikey"
+    - V.ii Add a json file to "/static/assets/endpoints.json" with values for "endpoint" and "key" and uncomment code at the top of app.py. 
+- VI. Run the web app
     - Use the command: python flask_app\app.py
 
 ## Build and Test
